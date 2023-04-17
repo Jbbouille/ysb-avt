@@ -12,7 +12,8 @@
 
   let questions: Question[] = [];
 
-  // function print question in window
+  window['printQuestions'] = () => console.log(questions);
+  window['printQuestion'] = (index) => console.log(questions[index-1]);
 </script>
 
 <main class="container">
