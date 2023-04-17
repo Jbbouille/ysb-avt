@@ -4,53 +4,52 @@
   import {onMount} from 'svelte';
   import {isStopWord} from './service';
 
+  const individual = [
+    {name: 'E-1 What is your experience in youth participation and empowerment at local, national, international level?', maxValue: 12},
+    {
+      name: 'E-2 What is your experience in reaching out to large groups of youth, including to youth that are in disadvantaged or vulnerable situations?',
+      maxValue: 8
+    },
+    {name: 'M-1 Why do you want to join the Youth Sounding Board?', maxValue: 4},
+    {name: 'M-2 How will you contribute to the work of the Youth Sounding Board?', maxValue: 4},
+    {
+      name: 'M-3 Imagine that you are selected for the Youth Sounding Board and after two years you look back on your work. What concrete result would you like to have achieved?',
+      maxValue: 3
+    },
+    {name: 'M-4 How should the Youth Sounding Board contribute to the implementation of the Youth Action Plan according to you?', maxValue: 1},
+    {
+      name: 'C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Language',
+      maxValue: 2
+    },
+  ];
+
+  const organization = [
+    ...individual,
+    {name: 'O-5 What is your role in your organisation?', maxValue: 2.5},
+    {name: 'O-6 Why are you a good representative of your organisation?', maxValue: 2.5},
+    {
+      name: 'O-7 Please explain briefly how your organisation has contributed to policy processes (e.g. consultation, advocacy etc.), in particular on youth.',
+      maxValue: 10
+    },
+    {
+      name: 'O-8 Please give an example of how your organisation has successfully contributed to strengthening youth participation (e.g. campaigns, outreach to vulnerable youth, etc.).',
+      maxValue: 10
+    },
+    {name: 'O-9 Please briefly explain which regions, countries, continents your organisation is covering through its activities.', maxValue: 5},
+    {name: 'M-1 How many individual members does your organisation have?', maxValue: 3},
+    {name: 'M-2 Please describe the profile of your individual members? (e.g. age range, general background, interest and expertise)', maxValue: 2},
+    {name: 'M-3 As a network (or similar), how many organisations are member of your network?', maxValue: 3},
+    {
+      name: 'M-4 As a network (or similar), please briefly describe the profile of your member organisations / groups (e.g. age range, general background, interest and expertise)',
+      maxValue: 2
+    },
+  ];
+
   export let questions: Question[] = [];
   $: index = 0;
   $: current = questions[index];
-  const listQuestionToRank = [
-    'C-2 Please describe how you have successfully used your communication skills (e.g. conducting campaigns, verbal and written skills, etc.) in youth participation and engagement processes, including the use of traditional and social media to advocate and negotiate for youth.',
-    'E-1 What is your experience in youth participation and empowerment at local, national, international level?',
-    'E-2 What is your experience in reaching out to large groups of youth, including to youth that are in disadvantaged or vulnerable situations?',
-    'I identify as a person with:',
-    'If YES, please specify:',
-    'If you selected other, please specify:',
-    'If you selected other, please specify:_1',
-    'If you selected other, please specify:_2',
-    'In order to ensure diversity and inclusion within the Youth Sounding Board, we would like to ask you whether you identify as a person with disability, special needs, a member of a minority group, with special needs and/or in a situation of vulnerability. Providing this information is not mandatory. Please note that not providing this information will not prevent a candidate from applying.',
-    'M-1 How many individual members does your organisation have?',
-    'M-1 Why do you want to join the Youth Sounding Board?',
-    'M-2 How will you contribute to the work of the Youth Sounding Board?',
-    'M-2 Please describe the profile of your individual members? (e.g. age range, general background, interest and expertise)',
-    'M-3 As a network (or similar), how many organisations are member of your network?',
-    'M-3 Imagine that you are selected for the Youth Sounding Board and after two years you look back on your work. What concrete result would you like to have achieved?',
-    'M-4 As a network (or similar), please briefly describe the profile of your member organisations / groups (e.g. age range, general background, interest and expertise)',
-    'M-4 How should the Youth Sounding Board contribute to the implementation of the Youth Action Plan according to you?',
-    'M-5 Is your organisation member of a larger network?',
-    'O-1 Information about the nominating organisation Contact details: (Email):Please indicate below the requested information',
-    'O-1 Information about the nominating organisation Name of the organisation::Please indicate below the requested information',
-    'O-1 Information about the nominating organisation Social Media: (if available):Please indicate below the requested information',
-    'O-1 Information about the nominating organisation Website: (if available):Please indicate below the requested information',
-    'O-2 Which category fits best to your nominating organisation?',
-    'O-3 Please indicate briefly the thematic areas your organisation is focusing on:',
-    'O-4 Please describe briefly the area(s) of expertise of your organisation/network.',
-    'O-5 What is your role in your organisation?',
-    'O-6 Why are you a good representative of your organisation?',
-    'O-7 Please explain briefly how your organisation has contributed to policy processes (e.g. consultation, advocacy etc.), in particular on youth.',
-    'O-8 Please give an example of how your organisation has successfully contributed to strengthening youth participation (e.g. campaigns, outreach to vulnerable youth, etc.).',
-    'O-9 Please briefly explain which regions, countries, continents your organisation is covering through its activities.',
-    'OPTIONAL - Is there anything you would like to add to your application?',
-    'OPTIONAL - You have chosen "other". Please specify:',
-    'Please describe briefly your areas of interest:',
-    'Please describe briefly your interest and/or expertise:',
-    'Please list all the Civil Society Organisations and other relevant organisations/programmes (e.g. UNICEF, etc.) that you have been involved in.',
-    'Please upload your signed Nomination Letter (pdf-format) here:',
-    'What are your areas of expertise in the frame of working with young people?',
-    'What are your areas of interest when it comes to working with young people?',
-    'You have chosen "other". Please specify:',
-    'You have chosen "other". Please specify:_1',
-    'You have chosen Other. Please specify the type of organisation:',
-    'You selected Other, please specify:',
-  ];
+  $: isIndividual = current?.['Which option are you applying for?'] === 'Option A : I am applying as an individual.';
+  $: listQuestionToRank = isIndividual ? individual : organization;
 
   const listToCheckSize = [
     'O-7 Please explain briefly how your organisation has contributed to policy processes (e.g. consultation, advocacy etc.), in particular on youth.',
@@ -105,6 +104,18 @@
     return size;
   }
 
+  function getTotalNotation(_: Question): Number {
+    if (!current) {
+      return 0;
+    }
+    return Object.keys(current).reduce((acc, prev) => {
+      if (prev.endsWith('-ysb-note')) {
+        return acc + current[prev];
+      }
+      return acc;
+    }, 0);
+  }
+
 </script>
 
 <style>
@@ -132,6 +143,7 @@
     .red {
         color: #b71c1c !important;
     }
+
     .warning {
         color: coral !important;
     }
@@ -155,43 +167,11 @@
     </div>
     <article>
       <div>
-        <span>Applying: {current['Which option are you applying for?'] === 'Option A : I am applying as an individual.' ? 'individual' : 'youth organisation' }</span>
-      </div>
-      <div class="grid">
-        {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Language']}
-          <div>
-            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Language']}
-              -</span>
-            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Level (A1, A2, B1, B2, C1, C2)']}</span>
-          </div>
-        {/if}
-        {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 2:Language']}
-          <div>
-            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 2:Language']}
-              -</span>
-            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 2:Level (A1, A2, B1, B2, C1, C2)']}</span>
-          </div>
-        {/if}
-        {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 3:Language']}
-          <div>
-            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 3:Language']}
-              -</span>
-            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 3:Level (A1, A2, B1, B2, C1, C2)']}</span>
-          </div>
-        {/if}
-        {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 4:Language']}
-          <div>
-            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 4:Language']}
-              -</span>
-            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 4:Level (A1, A2, B1, B2, C1, C2)']}</span>
-          </div>
-        {/if}
-        {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 5:Language']}
-          <div>
-            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 5:Language']}
-              -</span>
-            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 5:Level (A1, A2, B1, B2, C1, C2)']}</span>
-          </div>
+        <span>Applying: </span>
+        {#if isIndividual}
+          <span>Individual</span>
+        {:else}
+          <span class="red"><b>Youth Organisation</b></span>
         {/if}
       </div>
       <div>
@@ -228,18 +208,72 @@
           <span>{calculateAge(current['Please indicate your birthday*:'])}</span>
         </div>
       </div>
+      <hr>
+      <div>Total notation: {getTotalNotation(current)}</div>
     </article>
     <article>
-      {#each listQuestionToRank as currentKey}
-        {#if current[currentKey]}
-          <details open>
-            <summary class={current[`note-${currentKey}`] ? current[`note-${currentKey}`] > 10 ? 'red' : 'green' : ''}>
-              {currentKey} {current[`note-${currentKey}`] ? current[`note-${currentKey}`] : ''}
-            </summary>
-            <p class={getNumberOfWords(currentKey, current) ? 'warning': ''} data-tooltip={getNumberOfWords(currentKey, current) ? `Text contains few words (${getNumberOfWords(currentKey)})`: null}>{current[currentKey]}</p>
-            <input class="small" type="number" max="10" min="0" bind:value={current[`note-${currentKey}`]} on:change={saveQuestions}
-                   aria-invalid={current[`note-${currentKey}`] ? current[`note-${currentKey}`] > 10 : null}>
-          </details>
+      {#each listQuestionToRank as questionToRank}
+        {#if current[questionToRank.name]}
+          {#if questionToRank.name === 'C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Language'}
+            <details open>
+              <summary
+                  class={current[`${questionToRank.name}-ysb-note`] ? current[`${questionToRank.name}-ysb-note`] > questionToRank.maxValue ? 'red' : 'green' : ''}>
+                {questionToRank.name} {current[`${questionToRank.name}-ysb-note`] ? current[`${questionToRank.name}-ysb-note`] : ''}
+              </summary>
+              <div class="grid">
+                {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Language']}
+                  <div>
+            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Language']}
+              -</span>
+                    <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Level (A1, A2, B1, B2, C1, C2)']}</span>
+                  </div>
+                {/if}
+                {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 2:Language']}
+                  <div>
+            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 2:Language']}
+              -</span>
+                    <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 2:Level (A1, A2, B1, B2, C1, C2)']}</span>
+                  </div>
+                {/if}
+                {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 3:Language']}
+                  <div>
+            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 3:Language']}
+              -</span>
+                    <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 3:Level (A1, A2, B1, B2, C1, C2)']}</span>
+                  </div>
+                {/if}
+                {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 4:Language']}
+                  <div>
+            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 4:Language']}
+              -</span>
+                    <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 4:Level (A1, A2, B1, B2, C1, C2)']}</span>
+                  </div>
+                {/if}
+                {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 5:Language']}
+                  <div>
+            <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 5:Language']}
+              -</span>
+                    <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 5:Level (A1, A2, B1, B2, C1, C2)']}</span>
+                  </div>
+                {/if}
+              </div>
+              <input class="small" type="number" max={questionToRank.maxValue} min="0" bind:value={current[`${questionToRank.name}-ysb-note`]}
+                     on:change={saveQuestions}
+                     aria-invalid={current[`${questionToRank.name}-ysb-note`] != null ? current[`${questionToRank.name}-ysb-note`] > questionToRank.maxValue : null}>
+            </details>
+          {:else}
+            <details open>
+              <summary
+                  class={current[`${questionToRank.name}-ysb-note`] ? current[`${questionToRank.name}-ysb-note`] > questionToRank.maxValue ? 'red' : 'green' : ''}>
+                {questionToRank.name} {current[`${questionToRank.name}-ysb-note`] ? current[`${questionToRank.name}-ysb-note`] : ''}
+              </summary>
+              <p class={getNumberOfWords(questionToRank.name, current) ? 'warning': ''}
+                 data-tooltip={getNumberOfWords(questionToRank.name, current) ? `Text contains few words.`: null}>{current[questionToRank.name]}</p>
+              <input class="small" type="number" max={questionToRank.maxValue} min="0" bind:value={current[`${questionToRank.name}-ysb-note`]}
+                     on:change={saveQuestions}
+                     aria-invalid={current[`${questionToRank.name}-ysb-note`] != null ? current[`${questionToRank.name}-ysb-note`] > questionToRank.maxValue : null}>
+            </details>
+          {/if}
         {/if}
       {/each}
     </article>

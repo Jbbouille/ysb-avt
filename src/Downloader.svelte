@@ -5,7 +5,16 @@
   export let questions: Question[] = [];
 
   function downloadFile() {
-    const workSheet = utils.json_to_sheet<Question>(questions, {cellDates: true, dateNF: 'dd/mm/yyyy'});
+    const data = questions.map(q => {
+      q['totalNotation'] = Object.keys(q).reduce((acc, prev) => {
+        if (prev.endsWith('-ysb-note')) {
+          return acc + q[prev];
+        }
+        return acc;
+      }, 0);
+      return q;
+    }).sort((a, b) => b['totalNotation']-a['totalNotation']);
+    const workSheet = utils.json_to_sheet<Question>(data, {cellDates: true, dateNF: 'dd/mm/yyyy'});
     writeFile({Sheets: {'Content': workSheet}, bookType: 'xlsx', SheetNames: ['Content']}, 'out.xlsx');
   }
 </script>
