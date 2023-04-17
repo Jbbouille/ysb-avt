@@ -2,9 +2,10 @@
   import type {Question} from './types';
   import localForage from 'localforage';
   import {onMount} from 'svelte';
+  import {isStopWord} from './service';
 
   export let questions: Question[] = [];
-  let index = 0;
+  $: index = 0;
   $: current = questions[index];
   const listQuestionToRank = [
     'C-2 Please describe how you have successfully used your communication skills (e.g. conducting campaigns, verbal and written skills, etc.) in youth participation and engagement processes, including the use of traditional and social media to advocate and negotiate for youth.',
@@ -51,6 +52,15 @@
     'You selected Other, please specify:',
   ];
 
+  const listToCheckSize = [
+    'O-7 Please explain briefly how your organisation has contributed to policy processes (e.g. consultation, advocacy etc.), in particular on youth.',
+    'O-8 Please give an example of how your organisation has successfully contributed to strengthening youth participation (e.g. campaigns, outreach to vulnerable youth, etc.).',
+    'C-2 Please describe how you have successfully used your communication skills (e.g. conducting campaigns, verbal and written skills, etc.) in youth participation and engagement processes, including the use of traditional and social media to advocate and negotiate for youth.',
+    'M-1 Why do you want to join the Youth Sounding Board?',
+    'M-2 How will you contribute to the work of the Youth Sounding Board?',
+    'M-3 Imagine that you are selected for the Youth Sounding Board and after two years you look back on your work. What concrete result would you like to have achieved?',
+  ];
+
   onMount(async () => {
     const savedIndex = await localForage.getItem('index');
     if (savedIndex) {
@@ -58,8 +68,8 @@
     }
   })
 
-  function calculateAge(birthday: Date): number {
-    const ageDifMs = Date.now() - birthday;
+  function calculateAge(birthday: Date | string): number {
+    const ageDifMs = Date.now() - new Date(birthday);
     const ageDate = new Date(ageDifMs);
     return Math.abs(ageDate.getUTCFullYear() - 1970);
   }
@@ -82,6 +92,17 @@
     }
     index--;
     await localForage.setItem('index', `${index}`);
+  }
+
+  function getNumberOfWords(key: string, _: Question): number | null {
+    if (!listToCheckSize.includes(key) || !current?.[key]) {
+      return null;
+    }
+    const size = current[key].split(/\W+/).filter(w => !isStopWord(w)).length;
+    if (size > 15) {
+      return null;
+    }
+    return size;
   }
 
 </script>
@@ -110,6 +131,9 @@
 
     .red {
         color: #b71c1c !important;
+    }
+    .warning {
+        color: coral !important;
     }
 </style>
 
@@ -212,7 +236,7 @@
             <summary class={current[`note-${currentKey}`] ? current[`note-${currentKey}`] > 10 ? 'red' : 'green' : ''}>
               {currentKey} {current[`note-${currentKey}`] ? current[`note-${currentKey}`] : ''}
             </summary>
-            <p>{current[currentKey]}</p>
+            <p class={getNumberOfWords(currentKey, current) ? 'warning': ''} data-tooltip={getNumberOfWords(currentKey, current) ? `Text contains few words (${getNumberOfWords(currentKey)})`: null}>{current[currentKey]}</p>
             <input class="small" type="number" max="10" min="0" bind:value={current[`note-${currentKey}`]} on:change={saveQuestions}
                    aria-invalid={current[`note-${currentKey}`] ? current[`note-${currentKey}`] > 10 : null}>
           </details>

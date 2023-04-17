@@ -11,6 +11,8 @@
   })
 
   let questions: Question[] = [];
+
+  // function print question in window
 </script>
 
 <main class="container">
