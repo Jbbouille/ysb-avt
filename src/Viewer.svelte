@@ -53,6 +53,14 @@
   $: current = questions[index];
   $: isIndividual = current?.['Which option are you applying for?'] === 'Option A : I am applying as an individual.';
 
+  window['clearData'] = async () => {
+    questions = [];
+    index = 0;
+    await localForage.setItem('questions', JSON.stringify(questions));
+    await localForage.setItem('index', '0');
+    console.error('Data cleared.');
+  };
+
   const listToCheckSize = [
     'O-7 Please explain briefly how your organisation has contributed to policy processes (e.g. consultation, advocacy etc.), in particular on youth.',
     'O-8 Please give an example of how your organisation has successfully contributed to strengthening youth participation (e.g. campaigns, outreach to vulnerable youth, etc.).',
