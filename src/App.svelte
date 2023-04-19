@@ -17,7 +17,7 @@
 </script>
 
 <main class="container">
-  <h3>YSB Applications View Tool</h3>
+  <h3>YSB Applications Viewing Tool</h3>
   <Uploader bind:questions />
   <Viewer bind:questions />
   <Downloader bind:questions />

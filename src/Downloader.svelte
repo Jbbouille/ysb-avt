@@ -6,14 +6,20 @@
 
   function downloadFile() {
     const data = questions.map(q => {
-      q['totalNotation'] = Object.keys(q).reduce((acc, prev) => {
+      q['totalNotationIndividual'] = Object.keys(q).reduce((acc, prev) => {
         if (prev.endsWith('-ysb-note')) {
           return acc + q[prev];
         }
         return acc;
       }, 0);
+      q['totalNotationOrganisation'] = Object.keys(q).reduce((acc, prev) => {
+        if (prev.endsWith('-ysb-org-note')) {
+          return acc + q[prev];
+        }
+        return acc;
+      }, 0);
       return q;
-    }).sort((a, b) => b['totalNotation']-a['totalNotation']);
+    }).sort((a, b) => b['totalNotationIndividual']-a['totalNotationIndividual']);
     const workSheet = utils.json_to_sheet<Question>(data, {cellDates: true, dateNF: 'dd/mm/yyyy'});
     writeFile({Sheets: {'Content': workSheet}, bookType: 'xlsx', SheetNames: ['Content']}, 'out.xlsx');
   }
