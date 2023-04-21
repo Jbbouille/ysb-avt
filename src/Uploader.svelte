@@ -22,7 +22,7 @@
         questions = [];
         const content = readerEvent.target.result;
         const wb = read(content, {dateNF: 'dd/mm/yyyy', cellDates: true});
-        questions = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {dateNF: 'dd/mm/yyyy'});
+        questions = utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {dateNF: 'dd/mm/yyyy', defval: ''});
         await localForage.setItem('questions', JSON.stringify(questions));
         await localForage.setItem('index', '0');
       };

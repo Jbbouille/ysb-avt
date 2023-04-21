@@ -19,7 +19,7 @@
         return acc;
       }, 0);
       return q;
-    }).sort((a, b) => b['totalNotationIndividual']-a['totalNotationIndividual']);
+    });
     const workSheet = utils.json_to_sheet<Question>(data, {cellDates: true, dateNF: 'dd/mm/yyyy'});
     writeFile({Sheets: {'Content': workSheet}, bookType: 'xlsx', SheetNames: ['Content']}, 'out.xlsx');
   }

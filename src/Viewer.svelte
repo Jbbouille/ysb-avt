@@ -16,14 +16,14 @@
       name: 'M-3 Imagine that you are selected for the Youth Sounding Board and after two years you look back on your work. What concrete result would you like to have achieved?',
       maxValue: 3
     },
-    {name: 'M-4 How should the Youth Sounding Board contribute to the implementation of the Youth Action Plan according to you?', maxValue: 1},
+    {name: 'M-4 How should the Youth Sounding Board contribute to the implementation of the Youth Action Plan according to you?', maxValue: 2},
     {
       name: 'C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Language',
       maxValue: 2
     },
     {
       name: 'C-2 Please describe how you have successfully used your communication skills (e.g. conducting campaigns, verbal and written skills, etc.) in youth participation and engagement processes, including the use of traditional and social media to advocate and negotiate for youth.',
-      maxValue: 6
+      maxValue: 4
     },
   ];
 
@@ -39,11 +39,11 @@
       maxValue: 10
     },
     {name: 'O-9 Please briefly explain which regions, countries, continents your organisation is covering through its activities.', maxValue: 5},
-    {name: 'M-1 How many individual members does your organisation have?', maxValue: 3},
-    {name: 'M-2 Please describe the profile of your individual members? (e.g. age range, general background, interest and expertise)', maxValue: 2},
-    {name: 'M-3 As a network (or similar), how many organisations are member of your network?', maxValue: 3},
+    {name: 'D-1 How many individual members does your organisation have?', maxValue: 3},
+    {name: 'D-2 Please describe the profile of your individual members? (e.g. age range, general background, interest and expertise)', maxValue: 2},
+    {name: 'D-3 As a network (or similar), how many organisations are member of your network?', maxValue: 3},
     {
-      name: 'M-4 As a network (or similar), please briefly describe the profile of your member organisations / groups (e.g. age range, general background, interest and expertise)',
+      name: 'D-4 As a network (or similar), please briefly describe the profile of your member organisations / groups (e.g. age range, general background, interest and expertise)',
       maxValue: 2
     },
   ];
@@ -191,36 +191,48 @@
       </div>
       <div>
         <div>
-          <span class="description">Education: </span>
-          <span>{current?.['What is the highest education level you have completed?']}</span>
+          <span class="description">#Id: </span>
+          <span>{current?.['#Id']}</span>
         </div>
         <div>
-          <span class="description">Organisation: </span>
-          <span>{current?.['What is the name of your organisation?']}</span>
+          <span class="description">Age: </span>
+          {#if current?.['Please indicate your birthday*:']}
+            <span>{calculateAge(current['Please indicate your birthday*:'])}</span>
+          {/if}
         </div>
         <div>
-          <span class="description">Citizenship: </span>
-          <span>{current?.['What is your citizenship?']}</span>
+          <span class="description">Gender: </span>
+          <span>{current?.['Gender:']}</span>
         </div>
-        <div>
-          <span class="description">Occupation: </span>
-          <span>{current?.['What is your current occupation?']}</span>
-        </div>
+        {#if current?.['What is your citizenship?']}
+          <div>
+            <span class="description">Citizenship: </span>
+            <span>{current?.['What is your citizenship?']} {current?.['What is your citizenship? - If you selected other, please specify:']}</span>
+          </div>
+        {/if}
         <div>
           <span class="description">Place of birth: </span>
-          <span>{current?.['What is your place of birth?']}</span>
+          <span>{current?.['What is your place of birth?']} {current?.['What is your place of birth? - If you selected other, please specify:']}</span>
+        </div>
+        <div>
+          <span class="description">Living in: </span>
+          <span>{current?.['Which country are you currently living in?']} {current?.['Which country are you currently living in? - If you selected other, please specify:']}</span>
         </div>
         <div>
           <span class="description">City born: </span>
           <span>{current?.['Please mention the city where you were born.']}</span>
         </div>
         <div>
-          <span class="description">Living in: </span>
-          <span>{current?.['Which country are you currently living in?']}</span>
+          <span class="description">Education: </span>
+            <span>{current?.['What is the highest education level you have completed?']} {current?.['What is the highest education level you have completed? - You have chosen "other". Please specify:']}</span>
         </div>
         <div>
-          <span class="description">Diversity: </span>
-          <span>{current?.['I identify as a person with:']}</span>
+          <span class="description">Occupation: </span>
+          <span>{current?.['What is your current occupation?']} {current?.['What is your current occupation? - You have chosen "other". Please specify:']}</span>
+        </div>
+        <div>
+          <span class="description">Organisation: </span>
+          <span>{current?.['What is the name of your organisation?']}</span>
         </div>
         <div>
           <span class="description">Other orgs: </span>
@@ -243,11 +255,15 @@
           <span>{current?.['Please describe briefly your areas of interest:']}</span>
         </div>
         <div>
-          <span class="description">Age: </span>
-          {#if current?.['Please indicate your birthday*:']}
-            <span>{calculateAge(current['Please indicate your birthday*:'])}</span>
-          {/if}
+          <span class="description">Diversity: </span>
+          <span>{current?.['I identify as a person with:']} {current?.['OPTIONAL - You have chosen "other". Please specify:']}</span>
         </div>
+        {#if current?.['OPTIONAL - Is there anything you would like to add to your application?']}
+          <div>
+            <span class="description">Optional add: </span>
+            <span>{current?.['OPTIONAL - Is there anything you would like to add to your application?']}</span>
+          </div>
+        {/if}
       </div>
       <hr>
       {#if isIndividual}
@@ -344,7 +360,7 @@
           </div>
           <div>
             <span class="description">Category: </span>
-            <span>{current?.['O-2 Which category fits best to your nominating organisation?	You selected Other, please specify:']}</span>
+            <span>{current?.['O-2 Which category fits best to your nominating organisation?']} {current?.['O-2 Which category fits best to your nominating organisation? - You selected Other, please specify:']}</span>
           </div>
           <div>
             <span class="description">Thematic: </span>
@@ -354,6 +370,12 @@
             <span class="description">Expertises: </span>
             <span>{current?.['O-4 Please describe briefly the area(s) of expertise of your organisation/network.']}</span>
           </div>
+          {#if current?.['M-5 Is your organisation member of a larger network? - If YES, please specify:']}
+            <div>
+              <span class="description">Larger newtork: </span>
+              <span>{current?.['M-5 Is your organisation member of a larger network?']} {current?.['M-5 Is your organisation member of a larger network? - If YES, please specify:']}</span>
+            </div>
+          {/if}
         </div>
         <hr>
         <div>Total notation organisation: {getTotalNotation(current, false)}</div>
