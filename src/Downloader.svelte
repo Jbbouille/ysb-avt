@@ -20,7 +20,7 @@
       }, 0);
       return q;
     });
-    const workSheet = utils.json_to_sheet<Question>(data, {cellDates: true, dateNF: 'dd/mm/yyyy'});
+    const workSheet = utils.json_to_sheet<Question>(data, {cellDates: true, dateNF: 'dd/mm/yyyy hh:mm:ss'});
     writeFile({Sheets: {'Content': workSheet}, bookType: 'xlsx', SheetNames: ['Content']}, 'out.xlsx');
   }
 </script>

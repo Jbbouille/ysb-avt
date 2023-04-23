@@ -191,8 +191,8 @@
       </div>
       <div>
         <div>
-          <span class="description">#Id: </span>
-          <span>{current?.['#Id']}</span>
+          <span class="description">Id: </span>
+          <span>{current?.['Contribution ID']}</span>
         </div>
         <div>
           <span class="description">Age: </span>
