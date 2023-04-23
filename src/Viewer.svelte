@@ -10,13 +10,6 @@
       name: 'E-2 What is your experience in reaching out to large groups of youth, including to youth that are in disadvantaged or vulnerable situations?',
       maxValue: 8
     },
-    {name: 'M-1 Why do you want to join the Youth Sounding Board?', maxValue: 4},
-    {name: 'M-2 How will you contribute to the work of the Youth Sounding Board?', maxValue: 4},
-    {
-      name: 'M-3 Imagine that you are selected for the Youth Sounding Board and after two years you look back on your work. What concrete result would you like to have achieved?',
-      maxValue: 3
-    },
-    {name: 'M-4 How should the Youth Sounding Board contribute to the implementation of the Youth Action Plan according to you?', maxValue: 2},
     {
       name: 'C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Language',
       maxValue: 2
@@ -25,11 +18,16 @@
       name: 'C-2 Please describe how you have successfully used your communication skills (e.g. conducting campaigns, verbal and written skills, etc.) in youth participation and engagement processes, including the use of traditional and social media to advocate and negotiate for youth.',
       maxValue: 4
     },
+    {name: 'M-1 Why do you want to join the Youth Sounding Board?', maxValue: 4},
+    {name: 'M-2 How will you contribute to the work of the Youth Sounding Board?', maxValue: 4},
+    {
+      name: 'M-3 Imagine that you are selected for the Youth Sounding Board and after two years you look back on your work. What concrete result would you like to have achieved?',
+      maxValue: 4
+    },
+    {name: 'M-4 How should the Youth Sounding Board contribute to the implementation of the Youth Action Plan according to you?', maxValue: 2},
   ];
 
   const organization = [
-    {name: 'O-5 What is your role in your organisation?', maxValue: 2.5},
-    {name: 'O-6 Why are you a good representative of your organisation?', maxValue: 2.5},
     {
       name: 'O-7 Please explain briefly how your organisation has contributed to policy processes (e.g. consultation, advocacy etc.), in particular on youth.',
       maxValue: 10
@@ -38,14 +36,16 @@
       name: 'O-8 Please give an example of how your organisation has successfully contributed to strengthening youth participation (e.g. campaigns, outreach to vulnerable youth, etc.).',
       maxValue: 10
     },
-    {name: 'O-9 Please briefly explain which regions, countries, continents your organisation is covering through its activities.', maxValue: 5},
     {name: 'D-1 How many individual members does your organisation have?', maxValue: 3},
-    {name: 'D-2 Please describe the profile of your individual members? (e.g. age range, general background, interest and expertise)', maxValue: 2},
-    {name: 'D-3 As a network (or similar), how many organisations are member of your network?', maxValue: 3},
     {
       name: 'D-4 As a network (or similar), please briefly describe the profile of your member organisations / groups (e.g. age range, general background, interest and expertise)',
       maxValue: 2
     },
+    {name: 'D-3 As a network (or similar), how many organisations are member of your network?', maxValue: 3},
+    {name: 'D-2 Please describe the profile of your individual members? (e.g. age range, general background, interest and expertise)', maxValue: 2},
+    {name: 'O-9 Please briefly explain which regions, countries, continents your organisation is covering through its activities.', maxValue: 5},
+    {name: 'O-5 What is your role in your organisation?', maxValue: 2.5},
+    {name: 'O-6 Why are you a good representative of your organisation?', maxValue: 2.5},
   ];
 
   export let questions: Question[] = [];
@@ -267,75 +267,73 @@
       </div>
       <hr>
       {#if isIndividual}
-        <div>Total notation individual: {getTotalNotation(current, true)}</div>
+        <div>Total notation individual: {getTotalNotation(current, true)}/40</div>
       {:else}
-        <div>Total notation individual: {getTotalNotation(current, true)}</div>
-        <div>Total notation organisation: {getTotalNotation(current, false)}</div>
+        <div>Total notation individual: {getTotalNotation(current, true)}/40</div>
+        <div>Total notation organisation: {getTotalNotation(current, false)}/40</div>
       {/if}
     </article>
     <article>
       {#each individual as questionToRank}
-        {#if current?.[questionToRank.name]}
-          {#if questionToRank.name === 'C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Language'}
-            <details open>
-              <summary
-                  class={current[`${questionToRank.name}-ysb-note`] ? current[`${questionToRank.name}-ysb-note`] > questionToRank.maxValue ? 'red' : 'green' : ''}>
-                {questionToRank.name} {current[`${questionToRank.name}-ysb-note`] ? current[`${questionToRank.name}-ysb-note`] : ''}
-              </summary>
-              <div class="grid">
-                {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Language']}
-                  <div>
+        {#if questionToRank.name === 'C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Language'}
+          <details open>
+            <summary
+                class={current[`${questionToRank.name}-ysb-note`] ? current[`${questionToRank.name}-ysb-note`] > questionToRank.maxValue ? 'red' : 'green' : ''}>
+              {questionToRank.name} {current[`${questionToRank.name}-ysb-note`] ? current[`${questionToRank.name}-ysb-note`] : ''}
+            </summary>
+            <div class="grid">
+              {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Language']}
+                <div>
             <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Language']}
               -</span>
-                    <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Level (A1, A2, B1, B2, C1, C2)']}</span>
-                  </div>
-                {/if}
-                {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 2:Language']}
-                  <div>
+                  <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 1:Level (A1, A2, B1, B2, C1, C2)']}</span>
+                </div>
+              {/if}
+              {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 2:Language']}
+                <div>
             <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 2:Language']}
               -</span>
-                    <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 2:Level (A1, A2, B1, B2, C1, C2)']}</span>
-                  </div>
-                {/if}
-                {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 3:Language']}
-                  <div>
+                  <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 2:Level (A1, A2, B1, B2, C1, C2)']}</span>
+                </div>
+              {/if}
+              {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 3:Language']}
+                <div>
             <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 3:Language']}
               -</span>
-                    <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 3:Level (A1, A2, B1, B2, C1, C2)']}</span>
-                  </div>
-                {/if}
-                {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 4:Language']}
-                  <div>
+                  <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 3:Level (A1, A2, B1, B2, C1, C2)']}</span>
+                </div>
+              {/if}
+              {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 4:Language']}
+                <div>
             <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 4:Language']}
               -</span>
-                    <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 4:Level (A1, A2, B1, B2, C1, C2)']}</span>
-                  </div>
-                {/if}
-                {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 5:Language']}
-                  <div>
+                  <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 4:Level (A1, A2, B1, B2, C1, C2)']}</span>
+                </div>
+              {/if}
+              {#if current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 5:Language']}
+                <div>
             <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 5:Language']}
               -</span>
-                    <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 5:Level (A1, A2, B1, B2, C1, C2)']}</span>
-                  </div>
-                {/if}
-              </div>
-              <input class="small" type="number" max={questionToRank.maxValue} min="0" bind:value={current[`${questionToRank.name}-ysb-note`]}
-                     on:change={saveQuestions}
-                     aria-invalid={current[`${questionToRank.name}-ysb-note`] != null ? current[`${questionToRank.name}-ysb-note`] > questionToRank.maxValue : null}>
-            </details>
-          {:else}
-            <details open>
-              <summary
-                  class={current[`${questionToRank.name}-ysb-note`] ? current[`${questionToRank.name}-ysb-note`] > questionToRank.maxValue ? 'red' : 'green' : ''}>
-                {questionToRank.name} {current[`${questionToRank.name}-ysb-note`] ? current[`${questionToRank.name}-ysb-note`] : ''}
-              </summary>
-              <p class={getNumberOfWords(questionToRank.name, current) ? 'warning': ''}
-                 data-tooltip={getNumberOfWords(questionToRank.name, current) ? `Text contains few words.`: null}>{current[questionToRank.name]}</p>
-              <input class="small" type="number" max={questionToRank.maxValue} min="0" bind:value={current[`${questionToRank.name}-ysb-note`]}
-                     on:change={saveQuestions}
-                     aria-invalid={current[`${questionToRank.name}-ysb-note`] != null ? current[`${questionToRank.name}-ysb-note`] > questionToRank.maxValue : null}>
-            </details>
-          {/if}
+                  <span>{current['C-1 Please rate your language skills in ANY OTHER LANGUAGE than English: (according to the language self-assessment grid) Language 5:Level (A1, A2, B1, B2, C1, C2)']}</span>
+                </div>
+              {/if}
+            </div>
+            <input class="small" type="number" max={questionToRank.maxValue} min="0" bind:value={current[`${questionToRank.name}-ysb-note`]}
+                   on:change={saveQuestions}
+                   aria-invalid={current[`${questionToRank.name}-ysb-note`] != null ? current[`${questionToRank.name}-ysb-note`] > questionToRank.maxValue : null}>
+          </details>
+        {:else}
+          <details open>
+            <summary
+                class={current[`${questionToRank.name}-ysb-note`] != null ? current[`${questionToRank.name}-ysb-note`] > questionToRank.maxValue ? 'red' : 'green' : ''}>
+              {questionToRank.name} {current[`${questionToRank.name}-ysb-note`] ? current[`${questionToRank.name}-ysb-note`] : ''}
+            </summary>
+            <p class={getNumberOfWords(questionToRank.name, current) ? 'warning': ''}
+               data-tooltip={getNumberOfWords(questionToRank.name, current) ? `Text contains few words (${getNumberOfWords(questionToRank.name, current)}/15).`: null}>{current[questionToRank.name]}</p>
+            <input class="small" type="number" max={questionToRank.maxValue} min="0" bind:value={current[`${questionToRank.name}-ysb-note`]}
+                   on:change={saveQuestions}
+                   aria-invalid={current[`${questionToRank.name}-ysb-note`] != null ? current[`${questionToRank.name}-ysb-note`] > questionToRank.maxValue : null}>
+          </details>
         {/if}
       {/each}
     </article>
@@ -378,23 +376,21 @@
           {/if}
         </div>
         <hr>
-        <div>Total notation organisation: {getTotalNotation(current, false)}</div>
+        <div>Total notation organisation: {getTotalNotation(current, false)}/40</div>
       </article>
       <article>
         {#each organization as questionToRank}
-          {#if current?.[questionToRank.name]}
-            <details open>
-              <summary
-                  class={current[`${questionToRank.name}-ysb-org-note`] ? current[`${questionToRank.name}-ysb-org-note`] > questionToRank.maxValue ? 'red' : 'green' : ''}>
-                {questionToRank.name} {current[`${questionToRank.name}-ysb-org-note`] ? current[`${questionToRank.name}-ysb-org-note`] : ''}
-              </summary>
-              <p class={getNumberOfWords(questionToRank.name, current) ? 'warning': ''}
-                 data-tooltip={getNumberOfWords(questionToRank.name, current) ? `Text contains few words.`: null}>{current[questionToRank.name]}</p>
-              <input class="small" type="number" max={questionToRank.maxValue} min="0" bind:value={current[`${questionToRank.name}-ysb-org-note`]}
-                     on:change={saveQuestions}
-                     aria-invalid={current[`${questionToRank.name}-ysb-org-note`] != null ? current[`${questionToRank.name}-ysb-org-note`] > questionToRank.maxValue : null}>
-            </details>
-          {/if}
+          <details open>
+            <summary
+                class={current[`${questionToRank.name}-ysb-org-note`] != null ? current[`${questionToRank.name}-ysb-org-note`] > questionToRank.maxValue ? 'red' : 'green' : ''}>
+              {questionToRank.name} {current[`${questionToRank.name}-ysb-org-note`] ? current[`${questionToRank.name}-ysb-org-note`] : ''}
+            </summary>
+            <p class={getNumberOfWords(questionToRank.name, current) ? 'warning': ''}
+               data-tooltip={getNumberOfWords(questionToRank.name, current) ? `Text contains few words (${getNumberOfWords(questionToRank.name, current)}/15).`: null}>{current[questionToRank.name]}</p>
+            <input class="small" type="number" max={questionToRank.maxValue} min="0" bind:value={current[`${questionToRank.name}-ysb-org-note`]}
+                   on:change={saveQuestions}
+                   aria-invalid={current[`${questionToRank.name}-ysb-org-note`] != null ? current[`${questionToRank.name}-ysb-org-note`] > questionToRank.maxValue : null}>
+          </details>
         {/each}
       </article>
     {/if}
